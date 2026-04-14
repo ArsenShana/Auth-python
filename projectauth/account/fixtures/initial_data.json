@@ -1,0 +1,36 @@
+[
+  {"model": "account.role", "pk": 1, "fields": {"name": "admin",   "description": "Полный доступ ко всем ресурсам"}},
+  {"model": "account.role", "pk": 2, "fields": {"name": "manager", "description": "Управление заказами и товарами"}},
+  {"model": "account.role", "pk": 3, "fields": {"name": "user",    "description": "Просмотр доступных ресурсов"}},
+  {"model": "account.role", "pk": 4, "fields": {"name": "guest",   "description": "Минимальный доступ"}},
+
+  {"model": "account.businesselement", "pk": 1, "fields": {"code": "users",    "name": "Пользователи", "description": "Управление аккаунтами"}},
+  {"model": "account.businesselement", "pk": 2, "fields": {"code": "products", "name": "Товары",       "description": "Каталог товаров"}},
+  {"model": "account.businesselement", "pk": 3, "fields": {"code": "shops",    "name": "Магазины",     "description": "Список магазинов"}},
+  {"model": "account.businesselement", "pk": 4, "fields": {"code": "orders",   "name": "Заказы",       "description": "Управление заказами"}},
+  {"model": "account.businesselement", "pk": 5, "fields": {"code": "rules",    "name": "Правила доступа", "description": "Управление ACL"}},
+
+  {"model": "account.accessrule", "pk": 1,  "fields": {"role": 1, "element": 1, "can_read": true,  "can_read_all": true,  "can_create": true,  "can_update": true,  "can_update_all": true,  "can_delete": true,  "can_delete_all": true}},
+  {"model": "account.accessrule", "pk": 2,  "fields": {"role": 1, "element": 2, "can_read": true,  "can_read_all": true,  "can_create": true,  "can_update": true,  "can_update_all": true,  "can_delete": true,  "can_delete_all": true}},
+  {"model": "account.accessrule", "pk": 3,  "fields": {"role": 1, "element": 3, "can_read": true,  "can_read_all": true,  "can_create": true,  "can_update": true,  "can_update_all": true,  "can_delete": true,  "can_delete_all": true}},
+  {"model": "account.accessrule", "pk": 4,  "fields": {"role": 1, "element": 4, "can_read": true,  "can_read_all": true,  "can_create": true,  "can_update": true,  "can_update_all": true,  "can_delete": true,  "can_delete_all": true}},
+  {"model": "account.accessrule", "pk": 5,  "fields": {"role": 1, "element": 5, "can_read": true,  "can_read_all": true,  "can_create": true,  "can_update": true,  "can_update_all": true,  "can_delete": true,  "can_delete_all": true}},
+
+  {"model": "account.accessrule", "pk": 6,  "fields": {"role": 2, "element": 1, "can_read": true,  "can_read_all": false, "can_create": false, "can_update": true,  "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 7,  "fields": {"role": 2, "element": 2, "can_read": true,  "can_read_all": true,  "can_create": true,  "can_update": true,  "can_update_all": true,  "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 8,  "fields": {"role": 2, "element": 3, "can_read": true,  "can_read_all": true,  "can_create": false, "can_update": true,  "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 9,  "fields": {"role": 2, "element": 4, "can_read": true,  "can_read_all": true,  "can_create": true,  "can_update": true,  "can_update_all": true,  "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 10, "fields": {"role": 2, "element": 5, "can_read": false, "can_read_all": false, "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+
+  {"model": "account.accessrule", "pk": 11, "fields": {"role": 3, "element": 1, "can_read": true,  "can_read_all": false, "can_create": false, "can_update": true,  "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 12, "fields": {"role": 3, "element": 2, "can_read": true,  "can_read_all": true,  "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 13, "fields": {"role": 3, "element": 3, "can_read": true,  "can_read_all": true,  "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 14, "fields": {"role": 3, "element": 4, "can_read": true,  "can_read_all": false, "can_create": true,  "can_update": true,  "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 15, "fields": {"role": 3, "element": 5, "can_read": false, "can_read_all": false, "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+
+  {"model": "account.accessrule", "pk": 16, "fields": {"role": 4, "element": 1, "can_read": false, "can_read_all": false, "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 17, "fields": {"role": 4, "element": 2, "can_read": true,  "can_read_all": true,  "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 18, "fields": {"role": 4, "element": 3, "can_read": true,  "can_read_all": true,  "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 19, "fields": {"role": 4, "element": 4, "can_read": false, "can_read_all": false, "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}},
+  {"model": "account.accessrule", "pk": 20, "fields": {"role": 4, "element": 5, "can_read": false, "can_read_all": false, "can_create": false, "can_update": false, "can_update_all": false, "can_delete": false, "can_delete_all": false}}
+]
