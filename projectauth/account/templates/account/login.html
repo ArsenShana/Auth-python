@@ -1,0 +1,76 @@
+{% extends "account/base.html" %}
+{% block title %}Вход — Auth System{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:420px;padding-top:60px">
+  <div style="text-align:center;margin-bottom:28px">
+    <div style="font-size:48px;margin-bottom:8px">🔐</div>
+    <h1 style="font-size:22px;font-weight:700">Войти в систему</h1>
+    <p class="text-muted" style="margin-top:6px">Auth System — тестовое задание</p>
+  </div>
+
+  <div class="card">
+    <div class="alert" id="alert"></div>
+
+    <div style="margin-bottom:16px">
+      <p class="text-muted" style="margin-bottom:8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Быстрый вход:</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-gray btn-sm" onclick="fill('admin@example.com','admin123')">👑 admin</button>
+        <button class="btn btn-gray btn-sm" onclick="fill('manager@example.com','manager123')">📋 manager</button>
+        <button class="btn btn-gray btn-sm" onclick="fill('user@example.com','user123')">👤 user</button>
+        <button class="btn btn-gray btn-sm" onclick="fill('guest@example.com','guest123')">👁 guest</button>
+      </div>
+    </div>
+
+    <div style="height:1px;background:#21262d;margin-bottom:16px"></div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="admin@example.com" value="admin@example.com">
+    </div>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input id="password" type="password" placeholder="••••••••" value="admin123">
+    </div>
+    <button class="btn btn-green" style="width:100%;justify-content:center;margin-top:4px" id="loginBtn" onclick="doLogin()">
+      Войти
+    </button>
+
+    <p style="text-align:center;margin-top:16px;font-size:13px;color:#6e7681">
+      Нет аккаунта? <a href="/register/" class="link">Зарегистрироваться</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+if (getToken()) location.href = '/dashboard/';
+
+function fill(email, pass) {
+  document.getElementById('email').value    = email;
+  document.getElementById('password').value = pass;
+}
+
+async function doLogin() {
+  const btn = document.getElementById('loginBtn');
+  btn.innerHTML = '<span class="spinner"></span> Вхожу...';
+  btn.disabled  = true;
+
+  const { status, data } = await apiCall('POST', '/api/auth/login/', {
+    email:    document.getElementById('email').value,
+    password: document.getElementById('password').value,
+  });
+
+  if (status === 200 && data.token) {
+    localStorage.setItem('jwt_token', data.token);
+    localStorage.setItem('jwt_user',  JSON.stringify(data.user));
+    location.href = '/dashboard/';
+  } else {
+    showAlert('alert', 'err', data.error || 'Ошибка входа');
+    btn.innerHTML = 'Войти';
+    btn.disabled  = false;
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+{% endblock %}

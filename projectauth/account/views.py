@@ -1,4 +1,5 @@
 import bcrypt
+from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -196,3 +197,18 @@ class OrderListView(APIView):
 
     def get(self, request):
         return Response(MOCK_ORDERS)
+
+
+# ── Template Views ────────────────────────────────────────────────────────────
+
+def page_login(request):
+    return render(request, 'account/login.html')
+
+def page_register(request):
+    return render(request, 'account/register.html')
+
+def page_dashboard(request):
+    return render(request, 'account/dashboard.html')
+
+def page_catalog(request):
+    return render(request, 'account/catalog.html')

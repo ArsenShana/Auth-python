@@ -1,0 +1,114 @@
+{% extends "account/base.html" %}
+{% block title %}Каталог — Auth System{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+    <h1 style="font-size:20px;font-weight:700">Бизнес-объекты</h1>
+    <span class="text-muted">проверка прав доступа</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="loadTab('products',this)">📦 Товары</button>
+    <button class="tab" onclick="loadTab('shops',this)">🏪 Магазины</button>
+    <button class="tab" onclick="loadTab('orders',this)">📋 Заказы</button>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 id="tab-title">📦 Товары</h2>
+      <span id="access-status"></span>
+    </div>
+    <div id="tab-content">
+      <p class="text-muted">Загрузка...</p>
+    </div>
+  </div>
+
+  <!-- Response info -->
+  <div class="card">
+    <h2 style="margin-bottom:12px">🛰 HTTP Response</h2>
+    <div style="display:flex;gap:16px;margin-bottom:12px">
+      <div><span class="text-muted">Status:</span> <span id="resp-status" style="font-weight:700;color:#4ade80">—</span></div>
+      <div><span class="text-muted">Time:</span>   <span id="resp-time"   style="font-weight:700">—</span></div>
+      <div><span class="text-muted">URL:</span>    <span id="resp-url"    style="font-family:monospace;font-size:13px;color:#60a5fa">—</span></div>
+    </div>
+    <div class="json-box show" id="resp-json" style="max-height:200px">Нажми на вкладку чтобы загрузить</div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+if (!getToken()) location.href = '/login/';
+
+const ENDPOINTS = {
+  products: { title: '📦 Товары',   url: '/api/products/' },
+  shops:    { title: '🏪 Магазины', url: '/api/shops/'    },
+  orders:   { title: '📋 Заказы',   url: '/api/orders/'   },
+};
+
+let currentTab = 'products';
+
+async function loadTab(key, btn) {
+  currentTab = key;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const ep = ENDPOINTS[key];
+  document.getElementById('tab-title').textContent = ep.title;
+  document.getElementById('tab-content').innerHTML = '<p class="text-muted"><span class="spinner"></span> Запрос к API...</p>';
+  document.getElementById('resp-url').textContent  = ep.url;
+
+  const t0 = Date.now();
+  const { status, data } = await apiCall('GET', ep.url);
+  const ms = Date.now() - t0;
+
+  document.getElementById('resp-status').textContent = status;
+  document.getElementById('resp-status').style.color  = status < 300 ? '#4ade80' : '#f87171';
+  document.getElementById('resp-time').textContent    = ms + 'ms';
+  document.getElementById('resp-json').textContent    = JSON.stringify(data, null, 2);
+
+  const accessEl = document.getElementById('access-status');
+  if (status === 200) {
+    accessEl.innerHTML = '<span class="badge badge-green">✓ Доступ разрешён</span>';
+    renderTable(key, data);
+  } else if (status === 403) {
+    accessEl.innerHTML = '<span class="badge badge-red">✗ 403 Forbidden</span>';
+    document.getElementById('tab-content').innerHTML =
+      '<div style="text-align:center;padding:32px"><div style="font-size:48px">🚫</div><p style="margin-top:12px;color:#f87171;font-weight:600">403 Forbidden</p><p class="text-muted" style="margin-top:6px">У вашей роли нет прав на чтение этого ресурса</p></div>';
+  } else if (status === 401) {
+    accessEl.innerHTML = '<span class="badge badge-gray">✗ 401 Unauthorized</span>';
+    location.href = '/login/';
+  }
+}
+
+function renderTable(key, data) {
+  if (!data.length) {
+    document.getElementById('tab-content').innerHTML = '<p class="text-muted">Пусто</p>';
+    return;
+  }
+  const keys = Object.keys(data[0]);
+  let html = '<div style="overflow-x:auto"><table><thead><tr>';
+  keys.forEach(k => html += `<th>${k}</th>`);
+  html += '</tr></thead><tbody>';
+  data.forEach((row, i) => {
+    html += '<tr>';
+    keys.forEach(k => {
+      let val = row[k];
+      if (k === 'price' || k === 'amount') val = val.toLocaleString('ru') + ' ₸';
+      if (k === 'status') {
+        const colors = {completed:'badge-green', pending:'badge-blue', shipped:'badge-gray'};
+        val = `<span class="badge ${colors[val]||'badge-gray'}">${val}</span>`;
+      }
+      html += `<td>${val}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('tab-content').innerHTML = html;
+}
+
+// Auto-load first tab
+loadTab('products', document.querySelector('.tab'));
+{% endblock %}

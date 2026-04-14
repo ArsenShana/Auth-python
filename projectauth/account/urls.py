@@ -4,6 +4,7 @@ from .views import (
     AccessRuleListCreateView, AccessRuleDetailView,
     RoleListView, BusinessElementListView,
     ProductListView, ShopListView, OrderListView,
+    page_login, page_register, page_dashboard, page_catalog,
 )
 
 urlpatterns = [
